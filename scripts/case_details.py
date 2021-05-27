@@ -1,0 +1,20 @@
+import csv
+import sys
+import json
+import os
+
+from nlrb import NLRB
+from scrapelib.cache import FileCache
+import tqdm
+
+
+s = NLRB(retry_attempts=5, requests_per_minute=int(os.environ['SCRAPER_RPM']))
+
+s.cache_storage = FileCache('cache-directory')
+s.cache_write_only = False
+
+reader = csv.reader(sys.stdin)
+
+for case_number, in tqdm.tqdm(reader):
+    case_details = s.case_details(case_number)
+    print(json.dumps(case_details, default=str))
