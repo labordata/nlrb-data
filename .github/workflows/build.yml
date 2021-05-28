@@ -25,6 +25,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: upgrade sqlite3
+        run: |
+          sudo apt-get update
+          sudo apt-get install sqlite3
+        
       - name: install requirements
         run: pip install -r requirements.txt
 
