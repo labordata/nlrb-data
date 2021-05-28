@@ -52,7 +52,7 @@ CREATE TABLE election (election_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		       ballot_type text,
 		       unit_size INT,
 		       created_at timestamp default CURRENT_TIMESTAMP,
-		       UNIQUE(case_number, voting_unit_id, date, ballot_type),
+		       UNIQUE(case_number, voting_unit_id, date, ballot_type, tally_type),
 		       FOREIGN KEY(voting_unit_id) REFERENCES voting_unit(voting_unit_id),
 		       FOREIGN KEY(case_number) REFERENCES filing(case_number));
 
@@ -71,7 +71,6 @@ CREATE table tally(election_id int,
                    option text,
 		   votes int,
 		   created_at timestamp default CURRENT_TIMESTAMP,
-		   UNIQUE(election_id, option, votes),
 		   FOREIGN KEY(election_id) REFERENCES election(election_id));
 
 

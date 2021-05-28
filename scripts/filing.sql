@@ -29,25 +29,22 @@ INSERT INTO filing (name,
 		    number_of_eligible_voters,
 		    number_of_voters_on_petition_or_charge,
 		    certified_representative)
-    SELECT DISTINCT raw_filing.name,
-                    raw_filing.case_number,
-	            raw_filing.city,
-	            raw_filing.state,
-	            raw_filing.date_filed,
-	            raw_filing.region_assigned,
-	            raw_filing.status,
-	            raw_filing.date_closed,
-	            raw_filing.reason_closed,
-	            raw_filing.number_of_eligible_voters,
-	            raw_filing.number_of_voters_on_petition_or_charge,
-	            raw_filing.certified_representative
-    FROM raw_filing
-    LEFT JOIN
-    filing
-    USING (case_number)
-    WHERE filing.case_number IS NULL
-    ORDER BY unit_sought DESC;
-
+SELECT raw_filing.name,
+       raw_filing.case_number,
+       raw_filing.city,
+       raw_filing.state,
+       raw_filing.date_filed,
+       raw_filing.region_assigned,
+       raw_filing.status,
+       raw_filing.date_closed,
+       raw_filing.reason_closed,
+       raw_filing.number_of_eligible_voters,
+       raw_filing.number_of_voters_on_petition_or_charge,
+       raw_filing.certified_representative
+FROM raw_filing
+LEFT JOIN filing USING (case_number)
+WHERE filing.case_number IS NULL
+GROUP BY raw_filing.case_number;
 select changes() || ' rows insert into filing';
 
 UPDATE filing

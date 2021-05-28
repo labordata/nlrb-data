@@ -59,7 +59,7 @@ WHERE voting_unit_id is NULL;
 
 
 INSERT INTO election (case_number, voting_unit_id, date, tally_type, ballot_type, unit_size)
-select DISTINCT case_number,
+select case_number,
 		voting_unit_id,
 		tally_date,
 		rt.tally_type,
@@ -71,7 +71,9 @@ INNER JOIN voting_unit using (case_number,
 LEFT JOIN election USING (case_number,
 			  voting_unit_id,
 			  ballot_type)
-WHERE election_id IS NULL;
+WHERE election_id IS NULL
+GROUP BY case_number, voting_unit_id, rt.tally_type, tally_date, rt.ballot_type
+;
 
 select changes() || ' rows added to election';
 
@@ -114,9 +116,11 @@ from
 				 unit_id)
    inner join election using (case_number,
 			      voting_unit_id,
-			      ballot_type)
+			      ballot_type,
+			      tally_type)
    where date = tally_date
      and labor_union_1 != ''
+   group by election_id
    UNION SELECT election_id,
 		labor_union_2,
 		votes_for_labor_union_2
@@ -125,9 +129,11 @@ from
 				 unit_id)
    inner join election using (case_number,
 			      voting_unit_id,
-			      ballot_type)
+			      ballot_type,
+			      tally_type)
    where date = tally_date
      and labor_union_2 != ''
+   group by election_id 
    UNION SELECT election_id,
 		labor_union_3,
 		votes_for_labor_union_3
@@ -136,9 +142,11 @@ from
 				 unit_id)
    inner join election using (case_number,
 			      voting_unit_id,
-			      ballot_type)
+			      ballot_type,
+			      tally_type)
    where date = tally_date
      and labor_union_3 != ''
+   group by election_id
    UNION SELECT election_id,
 		'No union',
 		votes_against
@@ -147,9 +155,13 @@ from
 				 unit_id)
    inner join election using (case_number,
 			      voting_unit_id,
-			      ballot_type)
-   where date = tally_date) t
+			      ballot_type,
+			      tally_type)
+   where date = tally_date
+   group by election_id) t
 LEFT JOIN tally USING (election_id)
 WHERE tally.election_id IS NULL;
+
+select changes() || ' rows added to votes';
 
 END;
