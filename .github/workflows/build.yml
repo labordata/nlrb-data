@@ -27,7 +27,7 @@ jobs:
 
       - name: install requirements
         run: |
-          pip install --upgrade pip
+          pip install --upgrade pip setuptools
           pip install -r requirements.txt
 
       # Runs a single command using the runners shell
