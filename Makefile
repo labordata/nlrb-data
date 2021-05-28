@@ -1,4 +1,4 @@
-export NLRB_START_DATE=1950-01-01
+export NLRB_START_DATE=2021-05-01
 export SCRAPER_RPM=0
 
 .PHONY: update_db
