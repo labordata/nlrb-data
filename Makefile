@@ -1,7 +1,7 @@
 DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
 
-export NLRB_START_DATE=1950-01-01
-export SCRAPER_RPM=0
+export NLRB_START_DATE?=1950-01-01
+export SCRAPER_RPM?=0
 
 .PHONY: update_db
 update_db : filing.csv docket.csv participant.csv related_case.csv	\

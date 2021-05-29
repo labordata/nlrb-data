@@ -42,6 +42,4 @@ WHERE raw_filing.name IS NOT filing.name OR
       raw_filing.status IS NOT filing.status OR
       raw_filing.date_closed IS NOT filing.date_closed OR
       raw_filing.reason_closed IS NOT filing.reason_closed OR
-      raw_filing.number_of_eligible_voters IS NOT filing.number_of_eligible_voters OR
-      raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge OR
-      raw_filing.certified_representative IS NOT filing.certified_representative) t;
+      raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge) t;
