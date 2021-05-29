@@ -6,10 +6,10 @@ export SCRAPER_RPM=0
 .PHONY: update_db
 update_db : filing.csv docket.csv participant.csv related_case.csv	\
             related_document.csv allegation.csv tally.csv | nlrb.db
-	tail -n +2 filing.csv | /usr/local/Cellar/sqlite/3.34.0/bin/sqlite3 nlrb.db -init scripts/filing.sql
+	tail -n +2 filing.csv | sqlite3 nlrb.db -init scripts/filing.sql
 	cat docket.csv | sqlite3 nlrb.db -init scripts/docket.sql
 	cat participant.csv | sqlite3 nlrb.db -init scripts/participant.sql
-	cat related_case.csv | /usr/local/Cellar/sqlite/3.34.0/bin/sqlite3 nlrb.db -init scripts/related_case.sql
+	cat related_case.csv | sqlite3 nlrb.db -init scripts/related_case.sql
 	cat related_document.csv | sqlite3 nlrb.db -init scripts/related_document.sql
 	cat allegation.csv | sqlite3 nlrb.db -init scripts/allegation.sql
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql
