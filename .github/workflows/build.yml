@@ -51,7 +51,6 @@ jobs:
           zip nlrb.db.zip nlrb.db
           mv nlrb.db.zip public
       - name: Github Pages Deploy
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
