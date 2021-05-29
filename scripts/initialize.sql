@@ -50,7 +50,7 @@ CREATE TABLE allegation (case_number text not null,
 CREATE TABLE filing_group(root_case_number TEXT,
                         case_number TEXT NOT NULL PRIMARY KEY,
 		        created_at timestamp default CURRENT_TIMESTAMP,
-                        updated_at timestamp default CURRENT_TIMESTAMP,
+                        updated_at timestamp default CURRENT_TIMESTAMP);
 			FOREIGN KEY(case_number) REFERENCES filing(case_number));			 
 
 CREATE TABLE voting_unit (voting_unit_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,7 +58,8 @@ CREATE TABLE voting_unit (voting_unit_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			  unit_id TEXT,
 			  description,
 		          created_at timestamp default CURRENT_TIMESTAMP,
-			  UNIQUE(case_number, unit_id));
+			  UNIQUE(case_number, unit_id),
+			  FOREIGN KEY(case_number) REFERENCES filing(case_number));
 
 CREATE TABLE election (election_id INTEGER PRIMARY KEY AUTOINCREMENT,
                        case_number text not null,
@@ -72,7 +73,7 @@ CREATE TABLE election (election_id INTEGER PRIMARY KEY AUTOINCREMENT,
 		       FOREIGN KEY(voting_unit_id) REFERENCES voting_unit(voting_unit_id),
 		       FOREIGN KEY(case_number) REFERENCES filing(case_number));
 
-CREATE table election_result (election_id INTEGER,
+CREATE table election_result (election_id INTEGER PRIMARY KEY,
                               total_ballots_counted int,
 			      void_ballots int,
 			      challenged_ballots int,
@@ -80,8 +81,7 @@ CREATE table election_result (election_id INTEGER,
 			      runoff_required text,
 			      union_to_certify text,
 		              created_at timestamp default CURRENT_TIMESTAMP,
-			      UNIQUE(election_id),
-			      FOREIGN KEY(election_id) REFERENCES election(election));
+			      FOREIGN KEY(election_id) REFERENCES election(election_id));
 
 CREATE table tally(election_id int,
                    option text,

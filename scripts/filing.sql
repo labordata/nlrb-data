@@ -96,10 +96,10 @@ WHERE sought_unit.case_number is NULL;
 
 select changes() || ' rows inserted into sought_unit';
 
-INSERT INTO case_group (root_case_number, case_number)
+INSERT INTO filing_group (root_case_number, case_number)
 SELECT distinct case_number, case_number
 FROM raw_filing
-WHERE case_number NOT IN (select case_number from case_group);
+WHERE case_number NOT IN (select case_number from filing_group);
 
 END;
 
