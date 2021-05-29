@@ -1,5 +1,4 @@
 DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
-DB_URL=''
 
 export NLRB_START_DATE=1950-01-01
 export SCRAPER_RPM=0
