@@ -17,6 +17,8 @@ CREATE TEMPORARY TABLE raw_filing (name text,
 .mode csv
 .import /dev/stdin raw_filing
 
+DELETE FROM raw_filing WHERE case_number not like '%RC%';
+
 INSERT INTO filing (name,
                     case_number,
 		    city,
@@ -94,4 +96,10 @@ WHERE sought_unit.case_number is NULL;
 
 select changes() || ' rows inserted into sought_unit';
 
+INSERT INTO case_group (root_case_number, case_number)
+SELECT distinct case_number, case_number
+FROM raw_filing
+WHERE case_number NOT IN (select case_number from case_group);
+
 END;
+

@@ -37,6 +37,22 @@ CREATE TABLE participant (case_number text not null,
 		          created_at timestamp default CURRENT_TIMESTAMP,
 		     	  FOREIGN KEY(case_number) REFERENCES filing(case_number));
 
+CREATE TABLE document (case_number text not null,
+                       document text,
+		       url text,
+		       created_at timestamp default CURRENT_TIMESTAMP,
+		       FOREIGN KEY(case_number) REFERENCES filing(case_number));
+
+CREATE TABLE allegation (case_number text not null,
+                         allegation text,
+		         created_at timestamp default CURRENT_TIMESTAMP,			         FOREIGN KEY(case_number) REFERENCES filing(case_number));
+
+CREATE TABLE filing_group(root_case_number TEXT,
+                        case_number TEXT NOT NULL PRIMARY KEY,
+		        created_at timestamp default CURRENT_TIMESTAMP,
+                        updated_at timestamp default CURRENT_TIMESTAMP,
+			FOREIGN KEY(case_number) REFERENCES filing(case_number));			 
+
 CREATE TABLE voting_unit (voting_unit_id INTEGER PRIMARY KEY AUTOINCREMENT,
                           case_number text NOT NULL,
 			  unit_id TEXT,

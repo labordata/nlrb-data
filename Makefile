@@ -1,11 +1,18 @@
-export NLRB_START_DATE=2021-05-01
+DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
+DB_URL=''
+
+export NLRB_START_DATE=1950-01-01
 export SCRAPER_RPM=0
 
 .PHONY: update_db
-update_db : filing.csv docket.csv participant.csv tally.csv | nlrb.db
-	tail -n +2 filing.csv | sqlite3 nlrb.db -init scripts/filing.sql
+update_db : filing.csv docket.csv participant.csv related_case.csv	\
+            related_document.csv allegation.csv tally.csv | nlrb.db
+	tail -n +2 filing.csv | /usr/local/Cellar/sqlite/3.34.0/bin/sqlite3 nlrb.db -init scripts/filing.sql
 	cat docket.csv | sqlite3 nlrb.db -init scripts/docket.sql
 	cat participant.csv | sqlite3 nlrb.db -init scripts/participant.sql
+	cat related_case.csv | /usr/local/Cellar/sqlite/3.34.0/bin/sqlite3 nlrb.db -init scripts/related_case.sql
+	cat related_document.csv | sqlite3 nlrb.db -init scripts/related_document.sql
+	cat allegation.csv | sqlite3 nlrb.db -init scripts/allegation.sql
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql
 
 tally.csv :
@@ -18,7 +25,13 @@ participant.csv : case_detail.json.stream
 	cat $< | jq '.participants[] +  {case_number} | [.case_number, .participant, .type, .address, .phone_number] | @csv' -r > $@
 
 related_document.csv : case_detail.json.stream
-	cat $< | jq '.participants[] +  {case_number} | [.case_number, .participant, .type, .address, .phone_number] | @csv' -r > $@
+	cat $< | jq '.related_documents[] +  {case_number} | [.case_number, .name, .url] | @csv' -r > $@
+
+allegation.csv : case_detail.json.stream
+	cat $< | jq '.allegations[] +  {case_number} | [.case_number, .allegation] | @csv' -r > $@
+
+related_case.csv : case_detail.json.stream
+	cat $< | jq '.related_cases[] +  {case_number} | [.case_number, .related_case_number] | @csv' -r > $@
 
 case_detail.json.stream : certification.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
@@ -27,11 +40,11 @@ certification.csv : new_open_or_updated_cases.csv
 	cat $< | grep 'RC' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
-	tail -n +2 filing.csv | sqlite3 nlrb.db -init scripts/to_scrape.sql > $@
+	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql > $@
 
 filing.csv :
 	python scripts/filings.py | wget -i - -O - | tr -d '\000' > $@
 
 nlrb.db : 
-	sqlite3 $@ < scripts/initialize.sql
+	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql
 
