@@ -45,6 +45,12 @@ jobs:
           mkdir public
           zip nlrb.db.zip nlrb.db
           mv nlrb.db.zip public
+          mkdir nlrb-csv
+          cd nlrb-csv
+          bash ../scripts/sqlite2csv.sh ../nlrb.db
+          cd ..
+          zip nlrb-csv.zip nlrb-csv/*
+          mv nlrb-csv.zip public
       - name: Github Pages Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
