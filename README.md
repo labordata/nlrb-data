@@ -1,4 +1,6 @@
 # National Labor Relations Board Cases
+[![Update Database](https://github.com/labordata/nlrb-data/actions/workflows/build.yml/badge.svg)](https://github.com/labordata/nlrb-data/actions/workflows/build.yml)
+
 Daily refreshed data on representation certification cases from nlrb.gov. Data is updated nightly at about 10:00 pm Eastern.
 
 - [sqlite database](https://labordata.github.io/nlrb-data/nlrb.db.zip)
