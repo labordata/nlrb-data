@@ -4,7 +4,7 @@ Daily refreshed data on representation certification cases from nlrb.gov. Data i
 - [sqlite database](https://labordata.github.io/nlrb-data/nlrb.db.zip)
 - [CSV exports of tables](https://labordata.github.io/nlrb-data/nlrb-csv.zip)
 
-This repo contains code to build and update a database of representation certification cases published on the National Labor Relations Board's website. This diagram shows the different tables and variables contained in the database.
+This repository contains code to build and update a database of representation certification cases published on the National Labor Relations Board's website. This diagram shows the different tables and variables contained in the database.
 
 ![ERD Diagram](docs/erd.png)
 
