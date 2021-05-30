@@ -32,11 +32,8 @@ allegation.csv : case_detail.json.stream
 related_case.csv : case_detail.json.stream
 	cat $< | jq '.related_cases[] +  {case_number} | [.case_number, .related_case_number] | @csv' -r > $@
 
-case_detail.json.stream : certification.csv
+case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
-
-certification.csv : new_open_or_updated_cases.csv
-	cat $< | grep 'RC' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
 	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql > $@

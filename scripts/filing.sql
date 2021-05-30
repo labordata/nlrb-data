@@ -17,8 +17,6 @@ CREATE TEMPORARY TABLE raw_filing (name text,
 .mode csv
 .import /dev/stdin raw_filing
 
-DELETE FROM raw_filing WHERE case_number not like '%RC%';
-
 INSERT INTO filing (name,
                     case_number,
 		    city,
