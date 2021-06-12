@@ -15,7 +15,7 @@ else:
 
 s = NLRB()
 
-filing_csv = s.filings(case_types=['R'], date_start=DATE_START)
+filing_csv = s.filings(case_types=['R', 'C'], date_start=DATE_START)
 
 time.sleep(2)
 print(filing_csv)
