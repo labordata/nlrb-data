@@ -36,7 +36,7 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
-	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql > $@
+	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql | head -5000 > $@
 
 filing.csv :
 	python scripts/filings.py | wget -i - -O - | tr -d '\000' > $@
