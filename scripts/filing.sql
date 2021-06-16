@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TEMPORARY TABLE raw_filing (name text,
+CREATE TEMPORARY TABLE t_raw_filing (name text,
                                    case_number text,
 	                           city text,
 	                           state text,
@@ -15,7 +15,36 @@ CREATE TEMPORARY TABLE raw_filing (name text,
 	                           unit_sought text);
 
 .mode csv
-.import /dev/stdin raw_filing
+.import /dev/stdin t_raw_filing
+
+CREATE TEMPORARY TABLE raw_filing AS
+SELECT DISTINCT * FROM (
+SELECT t_raw_filing.*
+FROM t_raw_filing
+LEFT JOIN
+filing
+USING (case_number)
+WHERE filing.case_number IS NULL
+UNION
+SELECT case_number
+FROM filing
+WHERE status != 'Closed'
+UNION
+SELECT t_raw_filing.*
+FROM t_raw_filing
+INNER JOIN
+filing
+USING (case_number)
+WHERE t_raw_filing.name IS NOT filing.name OR
+      t_raw_filing.city IS NOT filing.city OR
+      t_raw_filing.state IS NOT filing.state OR
+      t_raw_filing.date_filed IS NOT filing.date_filed OR 
+      t_raw_filing.region_assigned IS NOT filing.region_assigned OR
+      t_raw_filing.status IS NOT filing.status OR
+      t_raw_filing.date_closed IS NOT filing.date_closed OR
+      t_raw_filing.reason_closed IS NOT filing.reason_closed OR
+      t_raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge) t
+LIMIT 4999;
 
 INSERT INTO filing (name,
                     case_number,
