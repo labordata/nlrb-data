@@ -44,6 +44,7 @@ WHERE t_raw_filing.name IS NOT filing.name OR
       t_raw_filing.date_closed IS NOT filing.date_closed OR
       t_raw_filing.reason_closed IS NOT filing.reason_closed OR
       t_raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge) t
+ORDER BY case_number
 LIMIT 4999;
 
 INSERT INTO filing (name,
