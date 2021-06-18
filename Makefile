@@ -1,3 +1,5 @@
+.DELETE_ON_ERROR:
+
 DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
 
 export NLRB_START_DATE?=1950-01-01
