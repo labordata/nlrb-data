@@ -1,4 +1,5 @@
 .DELETE_ON_ERROR:
+SHELL=bash -e -o pipefail
 
 DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
 
