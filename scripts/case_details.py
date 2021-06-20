@@ -15,6 +15,8 @@ s.cache_write_only = False
 
 reader = csv.reader(sys.stdin)
 
-for case_number, in tqdm.tqdm(reader):
+pbar = tqdm.tqdm(reader)
+for case_number, in pbar:
+    pbar.set_description(case_number)
     case_details = s.case_details(case_number)
     print(json.dumps(case_details, default=str))
