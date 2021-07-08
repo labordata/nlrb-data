@@ -13,7 +13,7 @@ else:
     DATE_START = datetime.datetime.strptime(DATE_START_STR,
                                             '%Y-%m-%d')
 
-s = NLRB()
+s = NLRB(retry_attempts=100)
 
 tallies_csv = s.tallies(date_start=DATE_START)
 
