@@ -5,6 +5,7 @@ import os
 
 from nlrb import NLRB
 from scrapelib.cache import FileCache
+import scrapelib
 import tqdm
 
 
@@ -18,5 +19,13 @@ reader = csv.reader(sys.stdin)
 pbar = tqdm.tqdm(reader)
 for case_number, in pbar:
     pbar.set_description(case_number)
-    case_details = s.case_details(case_number)
+
+    try:
+        case_details = s.case_details(case_number)
+    except scrapelib.HTTPError as e:
+        if e.response.status_code == 404:
+            continue
+        else:
+            raise
+
     print(json.dumps(case_details, default=str))
