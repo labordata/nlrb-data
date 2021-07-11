@@ -51,8 +51,15 @@ jobs:
           cd ..
           zip nlrb-csv.zip nlrb-csv/*
           mv nlrb-csv.zip public
-      - name: Github Pages Deploy
-        uses: peaceiris/actions-gh-pages@v3
+
+      - name: release
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
         with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-           publish_dir: ./public
+          upload_url: https://uploads.github.com/repos/labordata/nlrb-data/releases/43881005/assets{?name,label}
+          release_id: 43881005
+          asset_path: ./nlrb.db.zip # path to archive to upload
+          asset_name: nlrb.db.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+          asset_content_type: application/zip # required by GitHub API
+          max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
