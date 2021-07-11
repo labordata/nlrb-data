@@ -3,8 +3,7 @@
 
 Daily refreshed data on [representation cases from nlrb.gov](https://www.nlrb.gov/search/case). Data is updated nightly at about 10:00 pm Eastern.
 
-- [sqlite database](https://labordata.github.io/nlrb-data/nlrb.db.zip)
-- [CSV exports of tables](https://labordata.github.io/nlrb-data/nlrb-csv.zip)
+- [sqlite database](https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip)
 
 This repository contains code to build and update a database of representation certification cases published on the National Labor Relations Board's website. This diagram shows the different tables and variables contained in the database.
 
