@@ -40,25 +40,18 @@ jobs:
       - name: build database
         run: make
 
-      - name: setup public directory
+      - name: setup asset
         run: |
           mkdir public
           zip nlrb.db.zip nlrb.db
-          mv nlrb.db.zip public
-          mkdir nlrb-csv
-          cd nlrb-csv
-          bash ../scripts/sqlite2csv.sh ../nlrb.db
-          cd ..
-          zip nlrb-csv.zip nlrb-csv/*
-          mv nlrb-csv.zip public
 
       - name: release
         uses: WebFreak001/deploy-nightly@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
         with:
-          upload_url: https://uploads.github.com/repos/labordata/nlrb-data/releases/43881005/assets{?name,label}
-          release_id: 43881005
+          upload_url: https://uploads.github.com/repos/labordata/nlrb-data/releases/46019246/assets{?name,label}
+          release_id: 46019246
           asset_path: ./nlrb.db.zip # path to archive to upload
           asset_name: nlrb.db.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/zip # required by GitHub API
