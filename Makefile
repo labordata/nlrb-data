@@ -1,7 +1,7 @@
 .DELETE_ON_ERROR:
 SHELL=bash -e -o pipefail
 
-DB_URL=https://labordata.github.io/nlrb-data/nlrb.db.zip
+DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
 export NLRB_START_DATE?=1950-01-01
 export SCRAPER_RPM?=0
@@ -39,7 +39,7 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
-	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | tail -n +7500 | head -5 > $@
+	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | tail -n +7500 | head -5000 > $@
 
 filing.csv :
 	python scripts/filings.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
