@@ -1,7 +1,7 @@
 # National Labor Relations Board Cases
 [![Update Database](https://github.com/labordata/nlrb-data/actions/workflows/build.yml/badge.svg)](https://github.com/labordata/nlrb-data/actions/workflows/build.yml)
 
-Daily refreshed data on [representation and unfair labor cases from nlrb.gov](https://www.nlrb.gov/search/case). Data is updated nightly at about 10:00 pm Eastern.
+Daily refreshed data on [representation and unfair labor cases from nlrb.gov](https://www.nlrb.gov/search/case). Data is updated nightly.
 
 - [sqlite database](https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip)
 
