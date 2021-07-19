@@ -36,14 +36,12 @@ jobs:
       - name: install requirements
         run: pip install -r requirements.txt
 
-      - name: alternate scrape portion
+      # Runs a single command using the runners shell
+      - name: build database
         run: |
           if [ $(($GITHUB_RUN_NUMBER % 2)) -eq 0 ]; then export FILING_CHUNK=head; else export FILING_CHUNK=tail; fi
           echo $FILING_CHUNK
-
-      # Runs a single command using the runners shell
-      - name: build database
-        run: make
+          make
 
       - name: setup asset
         run: |
