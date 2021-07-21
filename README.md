@@ -4,6 +4,7 @@
 Daily refreshed data on [representation certification and unfair labor cases from nlrb.gov](https://www.nlrb.gov/search/case). Data is updated nightly.
 
 - [sqlite database](https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip)
+- [online access](https://labordata-warehouse.herokuapp.com/nlrb)
 
 This repository contains code to build and update a database of representation certification and unfair labor cases published on the National Labor Relations Board's website. This diagram shows the different tables and variables contained in the database.
 
