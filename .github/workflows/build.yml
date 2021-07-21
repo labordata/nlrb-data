@@ -59,18 +59,3 @@ jobs:
           asset_name: nlrb.db.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/zip # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
-
-      - name: Deploy to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          pip install datasette
-          sudo npm install -g heroku
-          heroku plugins:install heroku-builds
-          datasette publish heroku nlrb.db \
-            -n nlrb-datasette \
-            --install=datasette-vega \
-            --install=datasette-jellyfish \
-            --install=datasette-graphql \
-            --install='datasette-copyable>=0.2' \
-            --version-note=$GITHUB_RUN_NUMBER
