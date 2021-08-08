@@ -19,6 +19,12 @@ update_db : filing.csv docket.csv participant.csv related_case.csv	\
 	cat allegation.csv | sqlite3 nlrb.db -init scripts/allegation.sql -bail
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
 
+.PHONY : polish_db
+polish_db :
+	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
+	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
+
 tally.csv :
 	python scripts/tallies.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
 

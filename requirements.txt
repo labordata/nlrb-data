@@ -1,2 +1,3 @@
 https://github.com/labordata/nlrb-cases/archive/refs/heads/main.zip
 tqdm
+sqlite-utils
