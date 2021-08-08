@@ -23,13 +23,17 @@ update_db : filing.csv docket.csv participant.csv related_case.csv	\
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
 
 .PHONY : polish_db
-polish_db : update_db
+polish_db : #update_db
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
 	sqlite3 nlrb.db < scripts/nullify.sql | sqlite3 nlrb.db
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
-	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output url
+	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
+	sqlite-utils transform nlrb.db filing \
+            --column-order case_number \
+            --column-order name \
+            --column-order case_type --column-order url
 
 
 tally.csv :
