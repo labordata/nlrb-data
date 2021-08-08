@@ -28,6 +28,9 @@ polish_db : update_db
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
 	sqlite3 nlrb.db < scripts/nullify.sql | sqlite3 nlrb.db
+	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
+	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output url
+
 
 tally.csv :
 	python scripts/tallies.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
