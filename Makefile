@@ -8,6 +8,9 @@ export SCRAPER_RPM?=0
 
 FILING_CHUNK?=head
 
+.PHONY : all
+all : update_db polish_db
+
 .PHONY: update_db
 update_db : filing.csv docket.csv participant.csv related_case.csv	\
             related_document.csv allegation.csv tally.csv | nlrb.db
@@ -20,7 +23,7 @@ update_db : filing.csv docket.csv participant.csv related_case.csv	\
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
 
 .PHONY : polish_db
-polish_db :
+polish_db : update_db
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
