@@ -27,7 +27,7 @@ polish_db : #update_db
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
-	sqlite3 nlrb.db < scripts/nullify.sql | sqlite3 nlrb.db
+	sqlite3 nlrb.db < scripts/nullify.sql > scripts/null.sql && sqlite3 nlrb.db < scripts/null.sql
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
 	sqlite-utils transform nlrb.db filing \
