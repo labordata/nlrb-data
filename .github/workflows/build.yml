@@ -44,7 +44,7 @@ jobs:
       - name: build database
         env:
           DISPLAY: 99
-          CHROMEDRIVER_PATH: ./chromedriver
+          CHROMEDRIVER_PATH: /usr/local/bin/chromedriver
         run: |
           if [ $(($GITHUB_RUN_NUMBER % 2)) -eq 0 ]; then export FILING_CHUNK=head; else export FILING_CHUNK=tail; fi
           echo $FILING_CHUNK
