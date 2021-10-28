@@ -3,7 +3,7 @@ SHELL=bash -e -o pipefail
 
 DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
-export NLRB_START_DATE?=1950-01-01
+export NLRB_START_DATE?=2016-01-01
 export SCRAPER_RPM?=0
 
 FILING_CHUNK?=head
@@ -23,7 +23,7 @@ update_db : filing.csv docket.csv participant.csv related_case.csv	\
 	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
 
 .PHONY : polish_db
-polish_db : #update_db
+polish_db :
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
