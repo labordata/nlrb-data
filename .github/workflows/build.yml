@@ -26,10 +26,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: set up selenium
-        uses: nanasess/setup-chromedriver@v1.0.5
-      - name: start XVFB
-        run: Xvfb :99 &
       - name: upgrade sqlite3
         run: |
           sudo add-apt-repository ppa:linuxgndu/sqlitebrowser-testing
@@ -43,8 +39,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: build database
         env:
-          DISPLAY: 99
-          CHROMEDRIVER_PATH: /usr/local/bin/chromedriver
+          CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
           if [ $(($GITHUB_RUN_NUMBER % 2)) -eq 0 ]; then export FILING_CHUNK=head; else export FILING_CHUNK=tail; fi
           echo $FILING_CHUNK
