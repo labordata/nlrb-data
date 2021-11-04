@@ -30,10 +30,6 @@ polish_db :
 	sqlite3 nlrb.db < scripts/nullify.sql > scripts/null.sql && sqlite3 nlrb.db < scripts/null.sql
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
-	sqlite-utils transform nlrb.db filing \
-            --column-order case_number \
-            --column-order name \
-            --column-order case_type --column-order url
 
 
 tally.csv :
