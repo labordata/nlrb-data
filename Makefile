@@ -3,7 +3,7 @@ SHELL=bash -e -o pipefail
 
 DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
-export NLRB_START_DATE?=2020-01-01
+export NLRB_START_DATE?=1940-01-01
 export SCRAPER_RPM?=0
 
 FILING_CHUNK?=head
