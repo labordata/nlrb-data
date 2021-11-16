@@ -73,11 +73,11 @@ WHERE raw_filing.case_number = filing.case_number AND (
       raw_filing.name IS NOT filing.name OR
       raw_filing.city IS NOT filing.city OR
       raw_filing.state IS NOT filing.state OR
-      raw_filing.date_filed IS NOT filing.date_filed OR 
+      case when raw_filing.date_filed = '' then null else substr(raw_filing.date_filed, 7) || '-' || substr(raw_filing.date_filed, 1, 2) || '-' || substr(raw_filing.date_filed, 4, 2) end IS NOT filing.date_filed OR
       raw_filing.region_assigned IS NOT filing.region_assigned OR
       raw_filing.status IS NOT filing.status OR
-      raw_filing.date_closed IS NOT filing.date_closed OR
-      raw_filing.reason_closed IS NOT filing.reason_closed OR
+      case when raw_filing.date_closed = '' then null else substr(raw_filing.date_closed, 7) || '-' || substr(raw_filing.date_closed, 1, 2) || '-' || substr(raw_filing.date_closed, 4, 2) end IS NOT filing.date_closed OR
+      nullif(raw_filing.reason_closed, '') IS NOT filing.reason_closed OR
       raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge);
 
 select changes() || ' rows updated in filing';
