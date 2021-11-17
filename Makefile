@@ -3,7 +3,7 @@ SHELL=bash -e -o pipefail
 
 DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
-export NLRB_START_DATE?=2020-01-01
+export NLRB_START_DATE?=1940-01-01
 export SCRAPER_RPM?=0
 
 FILING_CHUNK?=head
@@ -54,7 +54,7 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
-	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | $(FILING_CHUNK) -7000 > $@
+	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | $(FILING_CHUNK) -6500 > $@
 
 filing.csv :
 	python scripts/filings.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
