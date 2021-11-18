@@ -1,13 +1,16 @@
-import os
 import sys
+import subprocess
 import time
 
 url = sys.stdin.read().strip()
 
 for _ in range(20):
     command_string = f"wget --max-redirect=0 --retry-connrefused --tries=100 {url} -O -"
-    exit_code = os.system(command_string)
-    if exit_code == 0:
+    result = subprocess.run(command_string, shell=True, stderr=subprocess.PIPE)
+    print(result.stderr.decode(), file=sys.stderr)
+    if result.returncode == 0:
+        break
+    elif b'0 redirections exceeded' not in result.stderr:
         break
     time.sleep(5)
 else:
