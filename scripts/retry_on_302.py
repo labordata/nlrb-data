@@ -11,7 +11,7 @@ for _ in range(20):
     if result.returncode == 0:
         break
     elif b'0 redirections exceeded' not in result.stderr:
-        break
+        raise RuntimeError(result.stderr)
     time.sleep(5)
 else:
     raise RuntimeError("Not able to download file")
