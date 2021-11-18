@@ -19,7 +19,7 @@ CREATE TEMPORARY TABLE t_new (case_number text);
 .mode csv
 .import /dev/stdin t_raw_filing
 
-.import new_cases.csv t_new
+.import new_open_or_updated_cases.csv t_new
 
 CREATE TEMPORARY TABLE raw_filing AS
 SELECT t_raw_filing.*
@@ -56,6 +56,40 @@ LEFT JOIN filing USING (case_number)
 WHERE filing.case_number IS NULL
 GROUP BY raw_filing.case_number;
 select changes() || ' rows insert into filing';
+
+UPDATE filing
+      set name = raw_filing.name,
+          city = raw_filing.city,
+          state = raw_filing.state,
+          date_filed = raw_filing.date_filed, 
+          region_assigned = raw_filing.region_assigned,
+          status = raw_filing.status,
+          date_closed = raw_filing.date_closed,
+          reason_closed = raw_filing.reason_closed,
+          number_of_voters_on_petition_or_charge = raw_filing.number_of_voters_on_petition_or_charge,
+          updated_at = CURRENT_TIMESTAMP
+FROM raw_filing
+WHERE raw_filing.case_number = filing.case_number AND (
+      raw_filing.name IS NOT filing.name OR
+      raw_filing.city IS NOT filing.city OR
+      raw_filing.state IS NOT filing.state OR
+      case when raw_filing.date_filed = '' then null else substr(raw_filing.date_filed, 7) || '-' || substr(raw_filing.date_filed, 1, 2) || '-' || substr(raw_filing.date_filed, 4, 2) end IS NOT filing.date_filed OR
+      raw_filing.region_assigned IS NOT filing.region_assigned OR
+      raw_filing.status IS NOT filing.status OR
+      case when raw_filing.date_closed = '' then null else substr(raw_filing.date_closed, 7) || '-' || substr(raw_filing.date_closed, 1, 2) || '-' || substr(raw_filing.date_closed, 4, 2) end IS NOT filing.date_closed OR
+      nullif(raw_filing.reason_closed, '') IS NOT filing.reason_closed OR
+      raw_filing.number_of_voters_on_petition_or_charge IS NOT filing.number_of_voters_on_petition_or_charge);
+
+select changes() || ' rows updated in filing';
+
+DELETE FROM sought_unit WHERE case_number in (
+SELECT raw_filing.case_number
+FROM raw_filing
+LEFT JOIN sought_unit
+USING (case_number, unit_sought)
+WHERE sought_unit.case_number is NULL);
+
+select changes() || ' rows deleted from sought_unit';
 
 INSERT INTO sought_unit (case_number, unit_sought)
 SELECT DISTINCT raw_filing.case_number, raw_filing.unit_sought
