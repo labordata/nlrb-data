@@ -33,7 +33,7 @@ polish_db :
 
 
 tally.csv :
-	python scripts/tallies.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
+	python scripts/tallies.py | python scripts/retry_on_302.py | tr -d '\000' > $@
 
 docket.csv : case_detail.json.stream
 	cat $< | jq '.docket[] +  {case_number} | [.case_number, .date, .document, ."issued_by/filed_by", .url] | @csv' -r > $@
@@ -57,7 +57,7 @@ new_open_or_updated_cases.csv : filing.csv | nlrb.db
 	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | $(FILING_CHUNK) -6500 > $@
 
 filing.csv :
-	python scripts/filings.py | wget --retry-connrefused --tries=100 -i - -O - | tr -d '\000' > $@
+	python scripts/filings.py | python scripts/retry_on_302.py | tr -d '\000' > $@
 
 nlrb.db : 
 	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql
