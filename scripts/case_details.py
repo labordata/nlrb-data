@@ -14,9 +14,9 @@ s = NLRB(retry_attempts=5, requests_per_minute=int(os.environ['SCRAPER_RPM']))
 s.cache_storage = FileCache('cache-directory')
 s.cache_write_only = False
 
-reader = csv.reader(sys.stdin)
+cases = list(csv.reader(sys.stdin))
 
-pbar = tqdm.tqdm(reader)
+pbar = tqdm.tqdm(cases)
 for case_number, in pbar:
     pbar.set_description(case_number)
 
