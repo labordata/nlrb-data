@@ -25,15 +25,17 @@ filing
 USING (case_number)
 WHERE filing.case_number IS NULL
 UNION
-SELECT case_number
+SELECT raw_filing.case_number
 FROM filing
-WHERE status != 'Closed'
+INNER JOIN raw_filing
+ON filing.case_number = raw_filing.case_number
+WHERE filing.status != 'Closed'
 UNION
 SELECT raw_filing.case_number
 FROM raw_filing
 INNER JOIN
 filing
-USING (case_number)
+ON raw_filing.case_number = filing.case_number
 WHERE raw_filing.name IS NOT filing.name OR
       raw_filing.city IS NOT filing.city OR
       raw_filing.state IS NOT filing.state OR
