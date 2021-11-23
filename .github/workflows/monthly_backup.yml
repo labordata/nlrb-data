@@ -1,11 +1,11 @@
-name: Deploy Nightly
+name: Monthly Backup
 on:
   schedule:
     - cron: '0 0 1 * *'
   workflow_dispatch:
 
 jobs:
-  nightly:
+  monthly:
     name: Backup monthly
     runs-on: ubuntu
     steps:
