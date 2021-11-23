@@ -26,7 +26,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Set current date as env variable
-        run: echo "BEGIN_NLRB_RUN::$(date +'%s')" >> $GITHUB_ENV
+        run: echo "BEGIN_NLRB_RUN=$(date +'%s')" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - name: upgrade sqlite3
         run: |
@@ -45,6 +45,7 @@ jobs:
         run: |
           if [ $(($GITHUB_RUN_NUMBER % 2)) -eq 0 ]; then export SORT_ORDER=-r; fi
           echo $SORT_ORDER
+          echo $BEGIN_NLRB_RUN
           make
 
       - name: setup asset
