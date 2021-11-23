@@ -1,39 +1,42 @@
 BEGIN;
 
-CREATE TEMPORARY TABLE raw_tally (case_number text,
-                                  name text,
-			          city text,
-			          state text,
-			          status text,
-			          date_closed text,
-			          reason_closed text,
-			          date_filed text,
-			          tally_date text,
-			          tally_type text,
-			          ballot_type text,
-			          unit_id text,
-			          num_of_eligible_voters int,
-			          void_ballots int,
-			          labor_union_1 text,
-			          labor_union_2 text,
-			          labor_union_3 text,
-			          votes_for_labor_union_1 int,
-			          votes_for_labor_union_2 int,
-			          votes_for_labor_union_3 int,
-			          votes_against int,
-			          total_ballots_counted int,
-			          challenged_ballots int,
-			          challenges_are_determinative text,
-			          runoff_required text,
-			          union_to_certify text,
-			          region text,
-			          voting_unit_unit_a text,
-			          voting_unit_unit_b text,
-			          voting_unit_unit_c text,
-			          voting_unit_unit_d text);
+CREATE TEMPORARY TABLE raw_tally (region text,
+                        case_number text,
+                        name text,
+                        status text,
+                        date_filed text,
+                        date_closed text,
+                        reason_closed text,
+                        city text,
+                        state text,
+                        unit_id text,
+                        ballot_type text,
+                        tally_type text,
+                        tally_date text,
+                        num_of_eligible_voters int,
+                        void_ballots int,
+                        labor_union_1 text,
+                        votes_for_labor_union_1 int,
+                        labor_union_2 text,
+                        votes_for_labor_union_2 int,
+                        labor_union_3 text,
+                        votes_for_labor_union_3 int,
+                        votes_against int,
+                        total_ballots_counted int,
+                        runoff_required text,
+                        challenged_ballots int,
+                        challenges_are_determinative text,
+                        union_to_certify text,
+                        voting_unit_unit_a text,
+                        voting_unit_unit_b text,
+                        voting_unit_unit_c text,
+                        voting_unit_unit_d text
+                        );
 
 .mode csv
 .import /dev/stdin raw_tally
+
+UPDATE raw_tally SET tally_date = substr(tally_date, 7) || '-' || substr(tally_date, 1, 2) || '-' || substr(tally_date, 4, 2);
 
 INSERT INTO voting_unit (case_number, unit_id, description)
 select DISTINCT t.*
@@ -58,13 +61,18 @@ LEFT JOIN voting_unit USING (case_number,
 WHERE voting_unit_id is NULL;
 
 
-INSERT INTO election (case_number, voting_unit_id, date, tally_type, ballot_type, unit_size)
+INSERT INTO election (case_number,
+                      voting_unit_id,
+		      date,
+		      tally_type,
+		      ballot_type,
+		      unit_size)
 select case_number,
-		voting_unit_id,
-		tally_date,
-		rt.tally_type,
-		rt.ballot_type,
-		rt.num_of_eligible_voters
+       voting_unit_id,
+       tally_date,
+       rt.tally_type,
+       rt.ballot_type,
+       rt.num_of_eligible_voters
 FROM raw_tally rt
 INNER JOIN voting_unit using (case_number,
 			      unit_id)
