@@ -7,7 +7,7 @@ on:
 jobs:
   monthly:
     name: Backup monthly
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Get nightly release
         run: wget https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
