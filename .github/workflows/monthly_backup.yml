@@ -1,0 +1,23 @@
+name: Deploy Nightly
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    name: Backup monthly
+    runs-on: ubuntu
+    steps:
+      - name: Get nightly release
+        run: wget https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
+      - name: Deploy backup
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+        with:
+          upload_url: https://uploads.github.com/repos/labordata/nlrb-data/releases/46019246/assets{?name,label}
+          release_id: 46019246
+          asset_path: ./nlrb.db.zip 
+          asset_name: nlrb-$$.db.zip 
+          asset_content_type: application/zip # required by GitHub API
