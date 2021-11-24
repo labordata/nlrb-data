@@ -33,7 +33,9 @@ polish_db :
 
 
 tally.csv :
-	python scripts/tallies.py | python scripts/retry_on_302.py | tr -d '\000' > $@
+	python scripts/tallies.py | python scripts/retry_on_302.py temp_$@
+	tr -d '\000' < temp_$@ > $@
+	rm temp_$@
 
 docket.csv : case_detail.json.stream
 	cat $< | jq '.docket[] +  {case_number} | [.case_number, .date, .document, ."issued_by/filed_by", .url] | @csv' -r > $@
@@ -54,10 +56,13 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
-	- tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail | sort $(SORT_ORDER) > $@
+	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error | sort $(SORT_ORDER) > $@
+	grep '/dev/stdin' error && exit 1
 
 filing.csv :
-	python scripts/filings.py | python scripts/retry_on_302.py | tr -d '\000' > $@
+	python scripts/filings.py | python scripts/retry_on_302.py temp_$@
+	tr -d '\000' < temp_$@ > $@
+	rm temp_$@
 
 nlrb.db : 
 	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql
