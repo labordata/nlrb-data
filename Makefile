@@ -57,7 +57,7 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 
 new_open_or_updated_cases.csv : filing.csv | nlrb.db
 	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error | sort $(SORT_ORDER) > $@
-	grep '/dev/stdin' error && exit 1
+	grep -q '/dev/stdin' error && exit 1 || exit 0
 
 filing.csv :
 	python scripts/filings.py | python scripts/retry_on_302.py temp_$@
