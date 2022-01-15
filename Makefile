@@ -30,6 +30,8 @@ polish_db :
 	sqlite3 nlrb.db < scripts/nullify.sql > scripts/null.sql && sqlite3 nlrb.db < scripts/null.sql
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
+	sqlite-utils create-index nlrb.db filing --if-not-exists -- case_type -created_at -date_filed
+	sqlite-utils vacuum nlrb.db
 
 tally.csv :
 	python scripts/tallies.py | python scripts/retry_on_302.py temp_$@
