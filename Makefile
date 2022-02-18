@@ -24,7 +24,7 @@ update_db : filing.csv docket.csv participant.csv related_case.csv	\
 
 .PHONY : polish_db
 polish_db :
-        sqlite3 nlrb.db < scripts/filing_update.sql
+	sqlite3 nlrb.db < scripts/filing_update.sql
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'

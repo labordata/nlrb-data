@@ -13,7 +13,8 @@ CREATE TABLE filing (case_number text not null primary key,
 	             number_of_voters_on_petition_or_charge int,
 	             certified_representative text,
 		     created_at timestamp default CURRENT_TIMESTAMP,
-		     updated_at timestamp default CURRENT_TIMESTAMP);
+		     updated_at timestamp default CURRENT_TIMESTAMP,
+		     last_checked_at timestamp default CURRENT TIMESTAMP);
 
 
 CREATE TABLE sought_unit(case_number text,

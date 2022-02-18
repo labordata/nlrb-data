@@ -5,7 +5,15 @@ SET
 FROM (
     SELECT
         case_number,
-        MAX(filing.updated_at, COALESCE(sought_unit.created_at, ''), coalesce(docket.created_at, ''), COALESCE(participant.created _at, ''), coalesce(document.created_at, ''), COALESCE(allegation.created_at, ''), coalesce(filin g_group.updated_at, ''), COALESCE(election.created_at, ''), coalesce(voting_unit.created_at, '')) updated_at
+        MAX(filing.updated_at,
+	    COALESCE(sought_unit.created_at, ''),
+	    coalesce(docket.created_at, ''),
+	    COALESCE(participant.created _at, ''),
+	    coalesce(document.created_at, ''),
+	    COALESCE(allegation.created_at, ''),
+	    coalesce(filin g_group.updated_at, ''),
+	    COALESCE(election.created_at, ''),
+	    coalesce(voting_unit.created_at, '')) updated_at
     FROM
         filing
     LEFT JOIN sought_unit USING (case_number)
@@ -18,3 +26,7 @@ FROM (
     LEFT JOIN voting_unit USING (case_number)) AS u
 WHERE
     filing.case_number = u.case_number;
+
+UPDATE filing
+SET last_checked_at = updated_at
+WHERE updated_at > last_checked_at;
