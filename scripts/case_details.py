@@ -13,8 +13,8 @@ max_elapsed = int(os.environ.get('MAX_ELAPSED', 5.5 * 60 * 60))
 begin_run = int(os.environ.get('BEGIN_NLRB_RUN', 0))
 s = NLRB(retry_attempts=5, requests_per_minute=int(os.environ['SCRAPER_RPM']))
 
-s.cache_storage = FileCache('cache-directory')
-s.cache_write_only = False
+#s.cache_storage = FileCache('cache-directory')
+#s.cache_write_only = False
 
 cases = list(csv.reader(sys.stdin))
 

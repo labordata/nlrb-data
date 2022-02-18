@@ -17,32 +17,32 @@ CREATE TEMPORARY TABLE raw_filing (name text,
 .mode csv
 .import /dev/stdin raw_filing
 
-SELECT DISTINCT * FROM (
-SELECT raw_filing.case_number
-FROM raw_filing
-LEFT JOIN
-filing
-USING (case_number)
-WHERE filing.case_number IS NULL
-UNION
-SELECT raw_filing.case_number
-FROM filing
-INNER JOIN raw_filing
-ON filing.case_number = raw_filing.case_number
-WHERE filing.status != 'Closed'
-UNION
-SELECT raw_filing.case_number
-FROM raw_filing
-INNER JOIN
-filing
-ON raw_filing.case_number = filing.case_number
-WHERE raw_filing.name IS NOT filing.name OR
-      nullif(raw_filing.city, '') IS NOT filing.city OR
-      nullif(raw_filing.state, '') IS NOT filing.state OR
-      case when raw_filing.date_filed = '' then null else substr(raw_filing.date_filed, 7) || '-' || substr(raw_filing.date_filed, 1, 2) || '-' || substr(raw_filing.date_filed, 4, 2) end IS NOT filing.date_filed OR
-      raw_filing.region_assigned IS NOT filing.region_assigned OR
-      raw_filing.status IS NOT filing.status OR
-      case when raw_filing.date_closed = '' then null else substr(raw_filing.date_closed, 7) || '-' || substr(raw_filing.date_closed, 1, 2) || '-' || substr(raw_filing.date_closed, 4, 2) end IS NOT filing.date_closed OR
-      nullif(raw_filing.reason_closed, '') IS NOT filing.reason_closed OR
-      nullif(raw_filing.number_of_voters_on_petition_or_charge, '') IS NOT filing.number_of_voters_on_petition_or_charge) t
-ORDER BY case_number;
+WITH overall_rate AS (
+    SELECT
+        count(*) / sum(julianday (last_checked_at) - julianday (updated_at)) AS rate,
+        3 AS prior_weight
+    FROM
+        filing
+    WHERE
+        status != 'Closed'
+)
+    SELECT case_number FROM (
+    SELECT
+        case_number
+    FROM
+        filing
+        INNER JOIN overall_rate ON 1 = 1
+    WHERE
+        status != 'Closed'
+    ORDER BY
+        - ((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) DESC
+    LIMIT 100) t
+    UNION
+    SELECT
+        raw_filing.case_number
+    FROM
+        raw_filing
+    LEFT JOIN filing USING (case_number)
+WHERE
+    filing.case_number IS NULL
+

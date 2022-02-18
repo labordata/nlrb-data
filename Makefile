@@ -3,7 +3,7 @@ SHELL=bash -e -o pipefail
 
 DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
-export NLRB_START_DATE?=1940-01-01
+export NLRB_START_DATE?=$(shell date -v-2w +"%Y-%m-%d")
 export SCRAPER_RPM?=0
 
 SORT_ORDER?=
@@ -57,12 +57,12 @@ related_case.csv : case_detail.json.stream
 case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
-new_open_or_updated_cases.csv : filing.csv | nlrb.db
+new_open_or_updated_cases.csv : new_filing.csv | nlrb.db
 	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error | sort $(SORT_ORDER) > $@
 	cat error
 	grep -q '/dev/stdin' error && exit 1 || exit 0
 
-filing.csv :
+new_filing.csv :
 	python scripts/filings.py | python scripts/retry_on_302.py temp_$@
 	tr -d '\000' < temp_$@ > $@
 	rm temp_$@
