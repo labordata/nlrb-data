@@ -3,7 +3,7 @@ SHELL=bash -e -o pipefail
 
 DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db.zip
 
-export NLRB_START_DATE?=$(shell date -v-2w +"%Y-%m-%d")
+export NLRB_START_DATE?=$(shell date +"%Y-%m-%d" -d "14 days ago")
 export SCRAPER_RPM?=0
 
 SORT_ORDER?=
