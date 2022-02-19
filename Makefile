@@ -54,6 +54,9 @@ allegation.csv : case_detail.json.stream
 related_case.csv : case_detail.json.stream
 	cat $< | jq '.related_cases[] +  {case_number} | [.case_number, .related_case_number] | @csv' -r > $@
 
+filing.csv : case_detail.json.stream
+	cat $< | jq '[.name, .case_number, .city, .state, .date_filed, .region_assigned, .status, .date_closed, .reason_closed, .voters, ."employees_on_charge/petition", .union, .unit_sought] | @csv' -r > $@
+
 case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
