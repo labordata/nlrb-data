@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TEMPORARY TABLE t_raw_filing (name text,
+CREATE TEMPORARY TABLE raw_filing (name text,
                                    case_number text,
 	                           city text,
 	                           state text,
@@ -14,18 +14,9 @@ CREATE TEMPORARY TABLE t_raw_filing (name text,
 	                           certified_representative text,
 	                           unit_sought text);
 
-CREATE TEMPORARY TABLE t_new (case_number text);
-
 .mode csv
-.import /dev/stdin t_raw_filing
+.import /dev/stdin raw_filing
 
-.import new_open_or_updated_cases.csv t_new
-
-CREATE TEMPORARY TABLE raw_filing AS
-SELECT t_raw_filing.*
-FROM t_raw_filing
-INNER JOIN t_new
-USING(case_number);
 
 INSERT INTO filing (name,
                     case_number,

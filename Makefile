@@ -14,7 +14,7 @@ all : update_db polish_db
 .PHONY: update_db
 update_db : filing.csv docket.csv participant.csv related_case.csv	\
             related_document.csv allegation.csv tally.csv | nlrb.db
-	tail -n +2 filing.csv | sqlite3 nlrb.db -init scripts/filing.sql -bail
+	cat filing.csv | sqlite3 nlrb.db -init scripts/filing.sql -bail
 	cat docket.csv | sqlite3 nlrb.db -init scripts/docket.sql -bail
 	cat participant.csv | sqlite3 nlrb.db -init scripts/participant.sql -bail
 	cat related_case.csv | sqlite3 nlrb.db -init scripts/related_case.sql -bail
