@@ -32,13 +32,7 @@ polish_db :
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
 	sqlite-utils create-index nlrb.db filing --if-not-exists -- case_type -created_at -date_filed
-	sqlite-utils convert nlrb.db election_mode date_filed 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_closed 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_ballot_mailed 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_ballot_counted 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_election_scheduled 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_tally_scheduled 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db election_mode date_tallied 'r.parsedate(value)'
+
 	#Can a unique election_id be assigned to each row in the election_mode table? Query in scripts/election_mode.sql is my best but failed attempt to do so.
 	sqlite-utils vacuum nlrb.db
 
@@ -78,7 +72,20 @@ new_filing.csv :
 	tr -d '\000' < temp_$@ > $@
 	rm temp_$@
 
+election_mode.csv : raw/NLRB-2022-000194_final-Election_results_with_election_mode_Jan_2017-Nov_2021.xlsx
+	in2csv -K 3 $< > $@
+
+election_mode : election_mode.csv | nlrb.db
+	tail -n +2 $< | sqlite3 nlrb.db -init scripts/election_mode.sql -bail
+	sqlite-utils convert nlrb.db election_mode date_filed 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_closed 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_ballot_mailed 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_ballot_counted 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_election_scheduled 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_tally_scheduled 'r.parsedate(value)'
+	sqlite-utils convert nlrb.db election_mode date_tallied 'r.parsedate(value)'
+
+
 nlrb.db :
 	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql
-	python3 scripts/election_mode.py
 

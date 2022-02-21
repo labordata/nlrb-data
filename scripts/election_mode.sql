@@ -1,13 +1,66 @@
---My failed attempt to assign a unique election_id to each row in election_mode table; case numbers like 06-RC-257937 make uniqueness hard
-SELECT c.election_id, a.*
-FROM election_mode a
-LEFT JOIN voting_unit b
-ON a.case_number = b.case_number
-AND a.unit_id  = b.unit_id
-LEFT JOIN election c
-ON b.voting_unit_id = c.voting_unit_id
-AND a.tally_type = c.tally_type
-AND a.tally_category = c. ballot_type
-INNER JOIN election_result d
-ON c.election_id = d.election_id
-AND CASE WHEN a.challenges_are_determinative = 'Y' THEN a.challenges_are_determinative = d.challenges_are_determinative ELSE 1 END
+BEGIN;
+
+CREATE TEMPORARY TABLE raw_election_mode (
+    case_number TEXT,
+    name TEXT, 
+    city TEXT, 
+    state TEXT, 
+    status TEXT, 
+    date_filed TEXT, 
+    date_closed TEXT,
+    reason_closed TEXT, 
+    election_mode TEXT,
+    date_ballot_mailed TEXT,
+    date_ballot_counted TEXT,
+    date_election_scheduled TEXT,
+    date_tally_scheduled TEXT,
+    date_tallied TEXT,
+    tally_type TEXT, 
+    ballot_type TEXT, 
+    unit_id TEXT, 
+    ballots_impounded TEXT,
+    number_of_eligible_voters INTEGER, 
+    number_of_void_ballots INTEGER,
+    labor_organization_1_name TEXT,
+    votes_for_labor_organization_1 INTEGER,
+    labor_organization_2_name TEXT,
+    votes_for_labor_organization_2 INTEGER,
+    labor_organization_3_name TEXT,
+    votes_for_labor_organization_3 INTEGER,
+    votes_cast_against_labor_org INTEGER,
+    number_of_valid_votes_counted INTEGER, 
+    number_of_challenged_ballots INTEGER, 
+    challenges_are_determinative TEXT, 
+    runoff_required TEXT, 
+    union_to_certify TEXT,
+    unit_involved_in_petition TEXT, 
+    bargaining_unit_determined TEXT
+  );
+
+.mode csv
+.import /dev/stdin raw_election_mode
+
+
+INSERT INTO election_mode
+with election_full as (
+  select
+    *
+  from
+    election
+    inner join voting_unit using (voting_unit_id)
+)
+select
+  ef.election_id,
+  rem.*
+from
+  raw_election_mode rem
+  left join election_full ef on rem.case_number = ef.case_number
+  and rem.unit_id = ef.unit_id
+  and (
+    rem.ballot_type = ef.ballot_type
+    or rem.ballot_type = 'Self Determination'
+  )
+  and rem.date_tallied = date
+  and rem.tally_type = coalesce(ef.tally_type, 'Initial');
+
+END;
