@@ -32,8 +32,6 @@ polish_db :
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
 	sqlite-utils create-index nlrb.db filing --if-not-exists -- case_type -created_at -date_filed
-
-	#Can a unique election_id be assigned to each row in the election_mode table? Query in scripts/election_mode.sql is my best but failed attempt to do so.
 	sqlite-utils vacuum nlrb.db
 
 tally.csv :
