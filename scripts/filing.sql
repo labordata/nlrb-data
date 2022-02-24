@@ -71,11 +71,11 @@ WHERE raw_filing.case_number = filing.case_number AND (
       nullif(raw_filing.reason_closed, '') IS NOT filing.reason_closed OR
       nullif(raw_filing.number_of_voters_on_petition_or_charge, '') IS NOT filing.number_of_voters_on_petition_or_charge);
 
+select changes() || ' rows updated in filing';
+
 UPDATE filing SET last_checked_at = CURRENT_TIMESTAMP
 FROM raw_filing
 WHERE raw_filing.case_number = filing.case_number;
-
-select changes() || ' rows updated in filing';
 
 DELETE FROM sought_unit WHERE case_number in (
 SELECT raw_filing.case_number
