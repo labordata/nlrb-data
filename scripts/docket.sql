@@ -15,7 +15,11 @@ DELETE FROM docket WHERE case_number IN (
        FROM raw_docket
        LEFT JOIN
        docket
-       USING (case_number, date, document, actor, url)
+       ON raw_docket.case_number = docket.case_number AND
+           nullif(raw_docket.date, '') IS docket.date AND
+	   raw_docket.document = docket.document AND
+	   nullif(raw_docket.actor, '') IS docket.actor AND
+	   nullif(raw_docket.url, '') IS docket.url
        WHERE docket.case_number IS NULL);
 
 select changes() || ' rows deleted from docket';

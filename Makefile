@@ -27,7 +27,6 @@ polish_db :
 	sqlite3 nlrb.db < scripts/filing_update.sql
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
-	sqlite-utils convert nlrb.db filing date_filed 'r.parsedate(value)'
 	sqlite3 nlrb.db < scripts/nullify.sql > scripts/null.sql && sqlite3 nlrb.db < scripts/null.sql
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
@@ -55,7 +54,7 @@ related_case.csv : case_detail.json.stream
 	cat $< | jq '.related_cases[] +  {case_number} | [.case_number, .related_case_number] | @csv' -r > $@
 
 filing.csv : case_detail.json.stream
-	cat $< | jq '[.name, .case_number, .city, .state, .date_filed, .region_assigned, .status, .date_closed, .reason_closed, .voters, ."employees_on_charge/petition", .union, .unit_sought] | @csv' -r > $@
+	cat $< | jq '[.name, .case_number, .city, ."states_&_territories", .date_filed, .region_assigned, .status, .date_closed, .reason_closed, .voters, ."employees_on_charge/petition", .union, .unit_sought] | @csv' -r > $@
 
 case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
