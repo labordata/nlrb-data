@@ -42,8 +42,6 @@ jobs:
         env:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
-          if [ $(($GITHUB_RUN_NUMBER % 2)) -eq 0 ]; then export SORT_ORDER=-r; fi
-          echo $SORT_ORDER
           echo $BEGIN_NLRB_RUN
           make
 

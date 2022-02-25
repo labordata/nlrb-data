@@ -6,8 +6,6 @@ DB_URL= https://github.com/labordata/nlrb-data/releases/download/nightly/nlrb.db
 export NLRB_START_DATE?=$(shell date +"%Y-%m-%d" -d "14 days ago")
 export SCRAPER_RPM?=0
 
-SORT_ORDER?=
-
 .PHONY : all
 all : update_db polish_db
 
@@ -60,7 +58,7 @@ case_detail.json.stream : new_open_or_updated_cases.csv
 	cat $< | python scripts/case_details.py | tr -d '\000' > $@
 
 new_open_or_updated_cases.csv : new_filing.csv | nlrb.db
-	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error | sort $(SORT_ORDER) > $@
+	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error | sort > $@
 	cat error
 	grep -q '/dev/stdin' error && exit 1 || exit 0
 

@@ -73,7 +73,6 @@ WHERE raw_filing.case_number = filing.case_number AND (
 
 select changes() || ' rows updated in filing';
 
-
 UPDATE filing SET last_checked_at = CURRENT_TIMESTAMP
 FROM raw_filing
 WHERE raw_filing.case_number = filing.case_number;
