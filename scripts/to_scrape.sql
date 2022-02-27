@@ -36,7 +36,7 @@ WITH overall_rate AS (
         status != 'Closed'
     ORDER BY
         - ((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) DESC
-    LIMIT 600) t
+    LIMIT 1000) t
     UNION
     SELECT
         raw_filing.case_number
