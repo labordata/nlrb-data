@@ -26,6 +26,14 @@ WITH overall_rate AS (
     WHERE
         status != 'Closed'
 )
+   SELECT
+        raw_filing.case_number
+    FROM
+        raw_filing
+    LEFT JOIN filing USING (case_number)
+    WHERE
+        filing.case_number IS NULL
+    UNION ALL
     SELECT case_number FROM (
     SELECT
         case_number
@@ -37,12 +45,5 @@ WITH overall_rate AS (
     ORDER BY
         -((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) ASC
     LIMIT 1000) t
-    UNION
-    SELECT
-        raw_filing.case_number
-    FROM
-        raw_filing
-    LEFT JOIN filing USING (case_number)
-WHERE
-    filing.case_number IS NULL
+
 
