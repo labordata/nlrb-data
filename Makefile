@@ -29,6 +29,8 @@ polish_db :
 	sqlite-utils convert nlrb.db filing case_number 'value.split("-")[1]' --output case_type
 	sqlite-utils convert nlrb.db filing case_number '"https://www.nlrb.gov/case/" + value' --output url
 	sqlite-utils create-index nlrb.db filing --if-not-exists -- case_type -created_at -date_filed
+	sqlite-utils create-index nlrb.db filing --if-not-exists date_filed
+	sqlite-utils create-index nlrb.db filing --if-not-exists date_closed
 	sqlite-utils vacuum nlrb.db
 
 tally.csv :
