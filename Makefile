@@ -31,6 +31,7 @@ polish_db :
 	sqlite-utils create-index nlrb.db filing --if-not-exists -- case_type -created_at -date_filed
 	sqlite-utils create-index nlrb.db filing --if-not-exists date_filed date_closed
 	sqlite-utils create-index nlrb.db filing --if-not-exists date_closed
+	sqlite-utils create-index nlrb.db filing --if-not-exists region_assigned
 	sqlite-utils vacuum nlrb.db
 
 tally.csv :
