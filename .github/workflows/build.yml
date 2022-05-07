@@ -43,6 +43,7 @@ jobs:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
           echo $BEGIN_NLRB_RUN
+          make tally.csv
           make
 
       - name: setup asset
