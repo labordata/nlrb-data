@@ -7,18 +7,21 @@ export NLRB_START_DATE?=$(shell date +"%Y-%m-%d" -d "14 days ago")
 export SCRAPER_RPM?=0
 
 .PHONY : all
-all : update_db polish_db
+all : update_most polish_db
 
-.PHONY: update_db
-update_db : filing.csv docket.csv participant.csv related_case.csv	\
-            related_document.csv allegation.csv tally.csv | nlrb.db
+.PHONY: update_tally
+update_tally : tally.csv | nlrb.db
+	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
+
+.PHONY: update_most
+update_most : filing.csv docket.csv participant.csv related_case.csv	\
+            related_document.csv allegation.csv | nlrb.db
 	cat filing.csv | sqlite3 nlrb.db -init scripts/filing.sql -bail
 	cat docket.csv | sqlite3 nlrb.db -init scripts/docket.sql -bail
 	cat participant.csv | sqlite3 nlrb.db -init scripts/participant.sql -bail
 	cat related_case.csv | sqlite3 nlrb.db -init scripts/related_case.sql -bail
 	cat related_document.csv | sqlite3 nlrb.db -init scripts/related_document.sql
 	cat allegation.csv | sqlite3 nlrb.db -init scripts/allegation.sql -bail
-	tail -n +2 tally.csv | sqlite3 nlrb.db -init scripts/tally.sql -bail
 
 .PHONY : polish_db
 polish_db :

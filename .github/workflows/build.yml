@@ -24,8 +24,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Set current date as env variable
-        run: echo "BEGIN_NLRB_RUN=$(date +'%s')" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - name: upgrade sqlite3
         run: |
@@ -36,14 +34,19 @@ jobs:
       - name: install requirements
         run: pip install -r requirements.txt
 
-
+      # Runs a single command using the runners shell
+      - name: update tally
+        env:
+          CHROMEDRIVER_PATH: /usr/bin/chromedriver
+        run: |
+          make tally.csv
+        continue-on-error: true
+        
       # Runs a single command using the runners shell
       - name: build database
         env:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
-          echo $BEGIN_NLRB_RUN
-          make tally.csv
           make
 
       - name: setup asset
