@@ -24,6 +24,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Set current date as env variable
+        run: echo "BEGIN_NLRB_RUN=$(date +'%s')" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - name: upgrade sqlite3
         run: |
@@ -39,6 +41,7 @@ jobs:
         env:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
+          echo $BEGIN_NLRB_RUN
           make tally.csv
         continue-on-error: true
         
@@ -47,6 +50,7 @@ jobs:
         env:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
+          echo $BEGIN_NLRB_RUN
           make
 
       - name: setup asset
