@@ -44,6 +44,6 @@ WITH overall_rate AS (
         status != 'Closed'
     ORDER BY
         -((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) ASC
-    LIMIT 2000) t
+    LIMIT 3000) t
 
 
