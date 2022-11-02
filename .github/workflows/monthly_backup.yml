@@ -21,3 +21,5 @@ jobs:
           asset_path: ./nlrb.db.zip 
           asset_name: nlrb-$$.db.zip 
           asset_content_type: application/zip # required by GitHub API
+      - name: keepalive
+        uses: gautamkrishnar/keepalive-workflow@v1
