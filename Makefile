@@ -7,7 +7,7 @@ export NLRB_START_DATE?=$(shell date +"%Y-%m-%d" -d "14 days ago")
 export SCRAPER_RPM?=0
 
 .PHONY : all
-all : update_tally update_most polish_db
+all : update_most polish_db
 
 .PHONY: update_tally
 update_tally : tally.csv | nlrb.db
