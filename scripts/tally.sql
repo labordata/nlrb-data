@@ -48,14 +48,19 @@ FROM
    where unit_id = 'A'
    UNION select case_number,
 		unit_id,
-		voting_unit_unit_a
+		voting_unit_unit_b
    from raw_tally
    where unit_id = 'B'
    UNION select case_number,
 		unit_id,
-		voting_unit_unit_a
+		voting_unit_unit_c
    from raw_tally
-   where unit_id = 'C') t
+   where unit_id = 'C'
+   UNION select case_number,
+		unit_id,
+		voting_unit_unit_d
+   from raw_tally
+   where unit_id = 'D') t
 LEFT JOIN voting_unit USING (case_number,
 			     unit_id)
 WHERE voting_unit_id is NULL;
