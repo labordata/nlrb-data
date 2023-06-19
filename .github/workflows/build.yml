@@ -42,6 +42,7 @@ jobs:
           CHROMEDRIVER_PATH: /usr/bin/chromedriver
         run: |
           echo $BEGIN_NLRB_RUN
+          /usr/bin/chromedriver -v
           make update_tally
         continue-on-error: true
         
