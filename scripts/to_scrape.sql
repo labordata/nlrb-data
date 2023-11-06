@@ -1,4 +1,4 @@
--- add trigger for updated_at
+-- inspired by Cho and Molina, Estimating Frequency of Change https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=60c8e42055dfb80072a547c73fbc18dfbacc20aa
 
 CREATE TEMPORARY TABLE raw_filing (name text,
                                    case_number text,
