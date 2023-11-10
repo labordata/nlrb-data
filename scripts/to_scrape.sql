@@ -17,7 +17,7 @@ B = (sum_i 1 / (t_checked_i - t_changed_i)) / N
 
 for all cases where t_checked_i > t_changed_i
 
-We can will control the effect of the prior with the parameter A, so
+We will control the effect of the prior with the parameter A, so
 that the case specific estimate of the rate of change is
 
 r_i = (A + 1) / (A/B + (t_checked_i - t_changed_i))
