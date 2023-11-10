@@ -25,9 +25,9 @@ the probability that a case has changed since the last time we checked it.
 
 p_i = 1 - exp(-r_i * (t_now - t_checked_i))
 
-for the purposes of ordering, simply ordering by the interior term
+for the purposes of ordering, we can simply use interior term
 
-r_i * (t_now - t_checked_i)
+r_i * (t_now - t_checked_i) DESC
 */
 
 
