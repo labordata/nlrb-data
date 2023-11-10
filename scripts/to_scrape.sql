@@ -8,7 +8,7 @@ a reasonable estimator of the rate of change is r_i = 1/(t_checked_i -
 t_changed_i).
 
 However, if the last time we checked for a change, the case was
-changed then t_checked_i - t_changed_i = 0, and r_i will be undefined.
+changed then t_checked_i - t_changed_i = 0 and r_i will be undefined.
 
 We can smooth that out by using a prior belief for the rate of
 change. We will use the average rate of change:
