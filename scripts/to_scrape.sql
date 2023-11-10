@@ -22,7 +22,7 @@ that the case specific estimate of the rate of change is
 
 r_i = (A + 1) / (A/B + (t_checked_i - t_changed_i))
 
-With this case specific estimate we can use the Poisson distribution
+With this case specific estimate, we can use the Poisson distribution
 to calculate the probability that a case has changed since the last
 time we checked it.
 
