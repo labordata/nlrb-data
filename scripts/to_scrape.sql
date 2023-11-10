@@ -2,7 +2,7 @@
 inspired by Cho and Molina, Estimating Frequency of Change https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=60c8e42055dfb80072a547c73fbc18dfbacc20aa
 
 Let t_changed_i be the last time we recorded a change in a case i and let
-t_checked_i be the last time we checked if the case changed, then an unbiased
+t_checked_i be the last time we checked if the case changed, then a reasonable
 estimator of the rate of change is r_i = 1/(t_checked_i - t_changed_i).
 
 However, if the last time we checked for a change, the case was changed then
