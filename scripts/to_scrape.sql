@@ -28,7 +28,7 @@ time we checked it.
 
 p_i = 1 - exp(-r_i * (t_now - t_checked_i))
 
-for the purposes of ordering, we can simply use interior term
+for the purposes of ordering, we can simply use the interior term
 
 r_i * (t_now - t_checked_i) DESC
 */
