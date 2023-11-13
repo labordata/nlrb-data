@@ -1,5 +1,5 @@
 /*
-We want to recheck old cases for update, in a somewhat smart way.
+We want to recheck old cases for updates in a somewhat smart way.
 If we knew that one case was being updated more frequently than another
 we would want to check the more frequent case more often. The code
 below attempts to do that.
