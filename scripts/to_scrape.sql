@@ -1,4 +1,9 @@
 /*
+We want to recheck old cases for update, in a somewhat smart way.
+If we knew that one case was being updated more frequently than another
+we would want to check the more frequent case more often. The code
+below attempts to do that.
+
 inspired by Cho and Molina, Estimating Frequency of Change
 https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=60c8e42055dfb80072a547c73fbc18dfbacc20aa
 
