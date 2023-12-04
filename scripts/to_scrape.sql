@@ -76,6 +76,7 @@ UNION ALL
 SELECT DISTINCT case_number FROM unmatched_participant_details
 UNION ALL
 SELECT DISTINCT case_number from participant where type is null
+UNION ALL
 SELECT
     case_number
 FROM (
