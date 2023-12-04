@@ -24,7 +24,7 @@ update_most : filing.csv docket.csv participant.csv related_case.csv	\
 	cat allegation.csv | sqlite3 nlrb.db -init scripts/allegation.sql -bail
 
 .PHONY : polish_db
-polish_db :
+polish_db : participant_details
 	sqlite3 nlrb.db < scripts/filing_update.sql
 	sqlite3 nlrb.db < scripts/drop_invalid_filings.sql
 	sqlite-utils convert nlrb.db filing date_closed 'r.parsedate(value)'
@@ -84,6 +84,16 @@ election_mode : election_mode.csv | nlrb.db
 	sqlite-utils convert nlrb.db election_mode date_tally_scheduled 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db election_mode date_tallied 'r.parsedate(value)'
 
+participant_details_%.csv : raw/NLRB-2023-001998_final-All_NxGen_%_cases_filed_thru_9-15-2023.xlsx
+	in2csv -K 2 $< > $@
+
+participant_details.csv : participant_details_R.csv participant_details_C.csv
+	csvstack $^ > $@
+
+participant_details : participant_details.csv | nlrb.db
+	csvs-to-sqlite $^ nlrb.db
+	sqlite3 nlrb.db < scripts/participant_full_address.sql
+	sqlite-utils add-foreign-key nlrb.db unmatched_participant_details case_number filing case_number
 
 nlrb.db :
 	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql
