@@ -27,7 +27,7 @@ select changes() || ' rows deleted from participant';
 
 INSERT INTO participant (case_number, participant, type, subtype, address, phone_number)
 SELECT
-    *
+    raw_participant.*
 FROM
     raw_participant
     LEFT JOIN participant USING (case_number)
