@@ -25,23 +25,19 @@ DELETE FROM participant WHERE case_number IN (
 
 select changes() || ' rows deleted from participant';
 
-INSERT INTO participant(case_number,
-                     	participant,
-		     	type,
-			subtype,
-		     	address,
-			phone_number)
-SELECT raw_participant.*
-FROM raw_participant
-LEFT JOIN
-participant
-USING (case_number)
-WHERE participant.case_number IS NULL
-AND (raw_participant.participant is not null OR
-     raw_participant.type IS NOT NULL OR
-     raw_participant.subtype IS NOT NULL OR
-     raw_participant.address IS NOT NULL OR
-     raw_participant.phone_number IS NOT NULL);
+INSERT INTO participant (case_number, participant, type, subtype, address, phone_number)
+SELECT
+    *
+FROM
+    raw_participant
+    LEFT JOIN participant USING (case_number)
+WHERE
+    participant.case_number IS NULL
+    AND (raw_participant.participant IS NOT NULL
+        OR raw_participant.type IS NOT NULL
+        OR raw_participant.subtype IS NOT NULL
+        OR raw_participant.address IS NOT NULL
+        OR raw_participant.phone_number IS NOT NULL);
 
 select changes() || ' rows added to participant';
 

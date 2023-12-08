@@ -46,7 +46,7 @@ docket.csv : case_detail.json.stream
 	cat $< | jq '.docket[] +  {case_number} | [.case_number, .date, .document, ."issued_by/filed_by", .url] | @csv' -r > $@
 
 participant.csv : case_detail.json.stream
-	cat $< | jq '.participants[] +  {case_number} | [.case_number, .participant, .type, .address, .phone_number] | @csv' -r > $@
+	cat $< | jq '.participants[] +  {case_number} | [.case_number, .participant, .type, .subtype, .address, .phone_number] | @csv' -r > $@
 
 related_document.csv : case_detail.json.stream
 	cat $< | jq '.related_documents[] +  {case_number} | [.case_number, .name, .url] | @csv' -r > $@
