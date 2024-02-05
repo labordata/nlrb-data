@@ -27,11 +27,6 @@ jobs:
       - name: Set current date as env variable
         run: echo "BEGIN_NLRB_RUN=$(date +'%s')" >> $GITHUB_ENV
       - uses: actions/checkout@v2
-      - name: upgrade sqlite3
-        run: |
-          sudo add-apt-repository ppa:linuxgndu/sqlitebrowser-testing
-          sudo apt-get update
-          sudo apt-get install sqlite3
         
       - name: install requirements
         run: pip install -r requirements.txt
