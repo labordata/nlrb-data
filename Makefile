@@ -42,26 +42,26 @@ tally.csv :
 	tr -d '\000' < temp_$@ > $@
 	rm temp_$@
 
-docket.csv : case_detail.json.stream
+docket.csv : case_detail.jl
 	cat $< | jq '.docket[] +  {case_number} | [.case_number, .date, .document, ."issued_by/filed_by", .url] | @csv' -r > $@
 
-participant.csv : case_detail.json.stream
+participant.csv : case_detail.jl
 	cat $< | jq '.participants[] +  {case_number} | [.case_number, .participant, .type, .subtype, .address, .phone_number] | @csv' -r > $@
 
-related_document.csv : case_detail.json.stream
+related_document.csv : case_detail.jl
 	cat $< | jq '.related_documents[] +  {case_number} | [.case_number, .name, .url] | @csv' -r > $@
 
-allegation.csv : case_detail.json.stream
+allegation.csv : case_detail.jl
 	cat $< | jq '.allegations[] +  {case_number} | [.case_number, .allegation] | @csv' -r > $@
 
-related_case.csv : case_detail.json.stream
+related_case.csv : case_detail.jl
 	cat $< | jq '.related_cases[] +  {case_number} | [.case_number, .related_case_number] | @csv' -r > $@
 
-filing.csv : case_detail.json.stream
+filing.csv : case_detail.jl
 	cat $< | jq '[.name, .case_number, .city, ."states_&_territories", .date_filed, .region_assigned, .status, .date_closed, .reason_closed, .voters, ."employees_on_charge/petition", .union, .unit_sought] | @csv' -r > $@
 
-case_detail.json.stream : new_open_or_updated_cases.csv
-	cat $< | python scripts/case_details.py | tr -d '\000' > $@
+case_detail.jl : new_open_or_updated_cases.csv
+	SCRAPY_SETTINGS_MODULE=nlrb_scrapy.settings scrapy crawl cases -a cases_file=$< -O $@ -L INFO
 
 new_open_or_updated_cases.csv : new_filing.csv | nlrb.db
 	tail -n +2 $< | sqlite3 nlrb.db -init scripts/to_scrape.sql -bail 2>error > $@
@@ -93,7 +93,6 @@ participant_details.csv : participant_details_R.csv participant_details_C.csv
 participant_details : participant_details.csv | nlrb.db
 	csvs-to-sqlite $^ nlrb.db
 	sqlite3 nlrb.db < scripts/participant_full_address.sql
-	sqlite-utils add-foreign-key nlrb.db unmatched_participant_details case_number filing case_number
 
 nlrb.db :
 	(wget -O /tmp/$$.zip $(DB_URL) && unzip /tmp/$$.zip) || sqlite3 $@ < scripts/initialize.sql

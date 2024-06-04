@@ -2,5 +2,5 @@ https://github.com/labordata/nlrb-cases/archive/refs/heads/main.zip
 tqdm
 sqlite-utils
 csvkit
-csvs-to-sqlite
-pandas<2.0
+https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
+https://github.com/labordata/nlrb-scrapy/archive/refs/heads/main.zip
