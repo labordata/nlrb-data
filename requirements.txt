@@ -4,3 +4,4 @@ sqlite-utils
 csvkit
 https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
 https://github.com/labordata/nlrb-scrapy/archive/refs/heads/main.zip
+pyOpenSSL >= 23.2.0
