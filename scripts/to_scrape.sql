@@ -85,6 +85,6 @@ FROM (
         status != 'Closed'
     ORDER BY
         ((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) DESC
-    LIMIT 5000) t
+    LIMIT 6000) t
 
 
