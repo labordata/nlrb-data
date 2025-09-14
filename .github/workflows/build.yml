@@ -65,6 +65,17 @@ jobs:
           asset_name: nlrb.db.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/zip # required by GitHub API
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+      - name: Update db in fly
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}      
+        run: |
+          curl -I https://warehouse.fly.dev/
+          gzip nlrb.db
+          flyctl ssh sftp put nlrb.db.gz /dbs/nlrb.db.gz -a warehouse
+          flyctl ssh console -C 'flock /tmp/inspect.lock -c "cd /dbs && gunzip -f /dbs/nlrb.db.gz && datasette inspect /dbs/*.db --inspect-file /dbs/inspect-data.json"' -a warehouse
+          flyctl apps restart warehouse          
   workflow-keepalive:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
