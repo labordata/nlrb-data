@@ -84,7 +84,10 @@ election_mode : election_mode.csv | nlrb.db
 	sqlite-utils convert nlrb.db election_mode date_tally_scheduled 'r.parsedate(value)'
 	sqlite-utils convert nlrb.db election_mode date_tallied 'r.parsedate(value)'
 
-participant_details_%.csv : raw/NLRB-2023-001998_final-All_NxGen_%_cases_filed_thru_9-15-2023.xlsx
+participant_details_R.csv : raw/2025-NLFO-02593.2.xlsx
+	in2csv -K 2 $< > $@
+
+participant_details_C.csv : raw/2025-NLFO-02593.1.xlsx
 	in2csv -K 2 $< > $@
 
 participant_details.csv : participant_details_R.csv participant_details_C.csv
