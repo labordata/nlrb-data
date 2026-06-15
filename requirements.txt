@@ -4,9 +4,10 @@ sqlite-utils
 csvkit
 https://github.com/LuighiV/csvs-to-sqlite/archive/refs/heads/main.zip
 https://github.com/labordata/nlrb-scrapy/archive/refs/heads/main.zip
-# Pin scrapy: 2.16 stopped calling the spider's start_requests() method,
-# which silently broke the case scraper (0 items scraped) from 2026-05-20.
-# nlrb-scrapy now also defines start() for 2.16+ compatibility; this cap
-# guards against further unvetted scrapy releases breaking the nightly build.
-scrapy < 2.16
+# Pin scrapy: 2.16 dropped the call to the spider's deprecated
+# start_requests() method, which silently broke the case scraper (0 items
+# scraped) from 2026-05-20 until nlrb-scrapy added an async start(). Stay on
+# 2.16 but cap below the next minor so an unvetted scrapy release can't break
+# the nightly build the same way again.
+scrapy < 2.17
 pyOpenSSL >= 23.2.0
