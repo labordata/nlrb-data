@@ -13,6 +13,13 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      start_date:
+        description: >-
+          Discover new filings since this date (YYYY-MM-DD) for a one-off
+          backfill. Leave blank for the normal 14-day window.
+        required: false
+        default: ""
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -26,6 +33,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Set current date as env variable
         run: echo "BEGIN_NLRB_RUN=$(date +'%s')" >> $GITHUB_ENV
+      # Optional manual backfill: widen the new-filing discovery window.
+      # Only set NLRB_START_DATE when a date was supplied, otherwise the
+      # Makefile's default 14-day window applies.
+      - name: Set backfill start date
+        if: github.event.inputs.start_date != ''
+        run: echo "NLRB_START_DATE=${{ github.event.inputs.start_date }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         
       - name: install requirements
