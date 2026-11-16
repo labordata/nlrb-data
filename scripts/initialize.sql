@@ -134,7 +134,7 @@ CREATE TABLE election_mode (
     union_to_certify TEXT,
     unit_involved_in_petition TEXT, 
     bargaining_unit_determined TEXT,
-    FOREIGN KEY(case_number) REFERENCES filings(case_number)
+    FOREIGN KEY(case_number) REFERENCES filing(case_number)
     FOREIGN KEY(election_id) REFERENCES election(election_id)
   );
 
