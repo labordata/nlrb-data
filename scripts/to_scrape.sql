@@ -86,5 +86,13 @@ FROM (
     ORDER BY
         ((prior_weight + 1) / (prior_weight / rate + julianday (last_checked_at) - julianday (updated_at))) * (julianday ('now') - julianday (last_checked_at)) DESC
     LIMIT 6000) t
+UNION ALL
+SELECT DISTINCT
+    case_number
+FROM
+    voting_unit
+WHERE
+    case_number NOT IN (SELECT case_number FROM filing)
+    AND case_number NOT IN (SELECT case_number FROM raw_filing)
 
 
