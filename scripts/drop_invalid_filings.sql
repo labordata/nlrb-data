@@ -3,6 +3,16 @@ WHERE case_number NOT LIKE '%-%'
     OR length(case_number) != 12
     OR case_number = '18-RC-286901';
 
+DELETE FROM sought_unit
+WHERE case_number NOT LIKE '%-%'
+    OR length(case_number) != 12
+    OR case_number = '18-RC-286901';
+
+DELETE FROM filing_group
+WHERE case_number NOT LIKE '%-%'
+    OR length(case_number) != 12
+    OR case_number = '18-RC-286901';
+
 
 
 
